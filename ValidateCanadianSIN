@@ -1,0 +1,117 @@
+ALTER FUNCTION [dbo].[SIN_Validator]
+(
+	@pSIN varchar(9)
+)
+RETURNS varchar(7)
+AS
+BEGIN
+	
+		declare @lastdigit int
+		set @lastdigit = cast(substring(@pSIN,9,1) as int)
+
+		declare @sinvalidator varchar(7)
+		declare @odd1 varchar(2), @odd1_1 int
+		declare @odd2 varchar(2), @odd2_1 int
+		declare @odd3 varchar(2), @odd3_1 int
+		declare @odd4 varchar(2), @odd4_1 int
+		declare @odd int
+		declare @even int
+		declare @total int
+		declare @checksin int
+		declare @checkdigit int
+
+		set @odd1 = 2*cast(substring(@pSIN,2,1) as int)
+
+			if cast(@odd1 as int) > 9
+				begin	
+				set @odd1_1 = cast(substring(@odd1,1,1) as int) + cast(substring(@odd1,2,1) as int) 
+				end
+			else
+				begin
+				set @odd1_1 = @odd1
+				end
+
+		set @odd2 = 2*cast(substring(@pSIN,4,1) as int)
+
+			if cast(@odd2 as int) > 9
+				begin	
+				set @odd2_1 = cast(substring(@odd2,1,1) as int) + cast(substring(@odd2,2,1) as int) 
+				end
+			else
+				begin
+				set @odd2_1 = @odd2
+				end
+
+		set @odd3 = 2*cast(substring(@pSIN,6,1) as int)
+
+			if cast(@odd3 as int) > 9
+				begin	
+				set @odd3_1 = cast(substring(@odd3,1,1) as int) + cast(substring(@odd3,2,1) as int) 
+				end
+			else
+				begin
+				set @odd3_1 = @odd3
+				end
+
+		set @odd4 = 2*cast(substring(@pSIN,8,1) as int)
+
+			if cast(@odd4 as int) > 9
+				begin	
+				set @odd4_1 = cast(substring(@odd4,1,1) as int) + cast(substring(@odd4,2,1) as int) 
+				end
+			else
+				begin
+				set @odd4_1 = @odd4
+				end
+
+		set @odd = @odd1_1 + @odd2_1 + @odd3_1 + @odd4_1
+
+		set @even = cast(substring(@pSIN,1,1) as int) + cast(substring(@pSIN,3,1) as int) + cast(substring(@pSIN,5,1) as int) + cast(substring(@pSIN,7,1) as int)
+
+
+		set @total = @odd + @even		
+
+		if @total <= 10
+			begin
+				set @checkdigit = 10 - @total
+			end
+
+		if @total > 10 and @total <= 20  
+			begin
+	 			set @checkdigit = 20 - @total
+			end
+
+		if @total > 20 and @total <= 30  
+			begin
+	 			set @checkdigit = 30 - @total
+			end
+
+		if @total > 30 and @total <= 40  
+			begin
+	 			set @checkdigit = 40 - @total
+			end
+
+		if @total > 40 and @total <= 50  
+			begin
+	 			set @checkdigit = 50 - @total
+			end
+
+		if @total > 50 and @total <= 60  
+			begin
+	 			set @checkdigit = 60 - @total
+			end
+
+		if @checkdigit = @lastdigit
+			begin
+				set @sinvalidator = 'Valid'
+			end
+		else
+			begin
+				set @sinvalidator = 'Invalid'
+			end	
+	
+
+	-- Return the result of the function
+	RETURN @sinvalidator
+
+END
